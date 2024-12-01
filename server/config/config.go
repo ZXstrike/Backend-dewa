@@ -15,6 +15,7 @@ type AppConfig struct {
 	PrivateKey *ecdsa.PrivateKey
 	PublicKey  *ecdsa.PublicKey
 	MySQL      MySQLConfig
+	SMTP       SMTPConfig
 }
 
 type MySQLConfig struct {
@@ -23,6 +24,14 @@ type MySQLConfig struct {
 	Host     string
 	Port     string
 	Database string
+}
+
+type SMTPConfig struct {
+	Host     string
+	Port     int
+	Username string
+	Email    string
+	Password string
 }
 
 var Config *AppConfig
@@ -56,6 +65,13 @@ func LoadConfig() (*AppConfig, error) {
 			Host:     os.Getenv("DB_HOST"),
 			Port:     os.Getenv("DB_PORT"),
 			Database: os.Getenv("DB_DATABASE"),
+		},
+		SMTP: SMTPConfig{
+			Host:     os.Getenv("SMTP_HOST"),
+			Port:     587,
+			Username: os.Getenv("SMTP_USERNAME"),
+			Email:    os.Getenv("SMTP_EMAIL"),
+			Password: os.Getenv("SMTP_PASSWORD"),
 		},
 	}
 

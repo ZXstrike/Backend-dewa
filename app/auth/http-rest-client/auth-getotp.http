@@ -1,0 +1,1 @@
+GET  http://localhost:80/auth/getotp?email=strike.miner0001@gmail.com HTTP/1.1

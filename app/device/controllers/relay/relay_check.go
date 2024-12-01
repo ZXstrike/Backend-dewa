@@ -1,4 +1,4 @@
-package controllers
+package relay
 
 import (
 	"net/http"

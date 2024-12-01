@@ -6,6 +6,6 @@ import (
 
 type DHT struct {
 	gorm.Model
-	// ESPID       uint
+	ESPID      uint
 	Temperature float64
 }

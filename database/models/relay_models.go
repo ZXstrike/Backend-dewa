@@ -6,6 +6,6 @@ import (
 
 type Relay struct {
 	gorm.Model
-	ESPID     string
+	ESPID     uint
 	Condition bool
 }

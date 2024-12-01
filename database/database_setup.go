@@ -11,7 +11,6 @@ import (
 var DB *gorm.DB
 
 func MySQLConnect(config *config.MySQLConfig) (*gorm.DB, error) {
-	// Connect to MySQL
 	dsn := config.Username + ":" + config.Password + "@tcp(" + config.Host + ":" + config.Port + ")/" + config.Database + "?charset=utf8mb4&parseTime=True&loc=Local"
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
@@ -27,13 +26,13 @@ func MySQLConnect(config *config.MySQLConfig) (*gorm.DB, error) {
 }
 
 func migration(db *gorm.DB) {
-	// Migrate the schema
 	db.AutoMigrate(
 		&models.User{},
 		&models.ESP{},
 		&models.DHT{},
 		&models.PZEM{},
 		&models.Relay{},
+		&models.UserOTP{},
 	)
 }
 

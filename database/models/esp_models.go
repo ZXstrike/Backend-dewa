@@ -1,12 +1,14 @@
 package models
 
 import (
+	"time"
+
 	"gorm.io/gorm"
 )
 
 type ESP struct {
 	gorm.Model
-	DHTs  []DHT  `gorm:"foreignKey:ESPID"`
-	PZEMs []PZEM `gorm:"foreignKey:ESPID"`
-	Relay []Relay
+	ESPcode     string `gorm:"unique"`
+	IsActive    bool
+	LiveTimeOut *time.Time `gorm:"default:null"`
 }

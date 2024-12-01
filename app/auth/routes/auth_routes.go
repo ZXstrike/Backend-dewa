@@ -18,4 +18,6 @@ func AuthRoutes(router *gin.Engine) {
 
 	authGroup.GET("/check", auth.AuthMiddleWare(), controllers.AuthCheck)
 
+	authGroup.GET("/getotp", controllers.GetAuthGetOtp)
+
 }

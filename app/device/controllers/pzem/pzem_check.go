@@ -1,4 +1,4 @@
-package controllers
+package pzem
 
 import (
 	"net/http"

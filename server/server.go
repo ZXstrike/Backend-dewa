@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"zxsttm/app"
+	"zxsttm/pkg/devicesession"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -39,6 +40,8 @@ func StartServer(Port string, db *gorm.DB) {
 			return
 		}
 	}()
+
+	go devicesession.DeviceLiveCheck(db)
 
 	// Graceful shutdown
 	quit := make(chan os.Signal, 1)

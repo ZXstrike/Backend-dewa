@@ -1,8 +1,7 @@
-package controllers
+package esp
 
 import (
 	"net/http"
-	"strconv"
 
 	"zxsttm/database"
 	"zxsttm/database/models"
@@ -12,16 +11,11 @@ import (
 
 func GetESPByID(c *gin.Context) {
 	db := database.DB
-	id := c.Param("id")
-	espID, err := strconv.ParseUint(id, 10, 64)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
-		return
-	}
+	id := c.Query("espcode")
 
 	var esp models.ESP
-	if err := db.Preload("DHTs").Preload("PZEMs").First(&esp, espID).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "ESP not found"})
+	if err := db.Where("es_pcode = ?", id).First(&esp).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "ESP not found", "id": id})
 		return
 	}
 

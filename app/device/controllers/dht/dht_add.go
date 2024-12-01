@@ -1,4 +1,4 @@
-package controllers
+package dht
 
 import (
 	"zxsttm/database"
@@ -11,34 +11,32 @@ func DHTadd(c *gin.Context) {
 	db := database.DB
 
 	var body struct {
-		ESPID       string  `json:"ESPid" binding:"required"`
+		ESPcode       string     `json:"ESPcode" binding:"required"`
 		Temperature float64 `json:"Temperature" binding:"required"`
 	}
 
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(400, gin.H{
-			"error": "Invalid request body",
+			"error": err,
 		})
 		return
 	}
 
-	Convert ESPID from string to uint
-	espidUint, err := strconv.ParseUint(body.ESPID, 10, 32)
-	if err != nil {
+	var esp models.ESP
+	if err := db.Where("es_pcode = ?", body.ESPcode).First(&esp).Error; err != nil {
 		c.JSON(400, gin.H{
-			"error": "Invalid ESPID format",
+			"error": "ESP Not Found",
 		})
 		return
 	}
 
 	dht := models.DHT{
-		ESPID:       uint(espidUint), // now assigning as uint
+		ESPID:       uint(esp.ID),
 		Temperature: body.Temperature,
 	}
 
-	// Save the dht record to the database
 	if err := db.Create(&dht).Error; err != nil {
-		c.JSON(500, gin.H{"error": "Failed to create record"})
+		c.JSON(500, gin.H{"error": err})
 		return
 	}
 

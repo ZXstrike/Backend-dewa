@@ -2,7 +2,6 @@ package relay
 
 import (
 	"net/http"
-	"strconv"
 
 	"zxsttm/database"
 	"zxsttm/database/models"
@@ -12,16 +11,11 @@ import (
 
 func GetRelayState(c *gin.Context) {
 	db := database.DB
-	code := c.Param("espcode")
-	espCode, err := strconv.ParseUint(code, 10, 64)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
-		return
-	}
+	espCode := c.Param("espcode")
 
 	esp := models.ESP{}
 
-	if err := db.First(&esp, "espcode = ?", espCode).Error; err != nil {
+	if err := db.First(&esp, "es_pcode = ?", espCode).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "ESP tidak ditemukan"})
 		return
 	}

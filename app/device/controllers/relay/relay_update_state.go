@@ -12,7 +12,7 @@ func RelayUpdateState(c *gin.Context) {
 
 	var body struct {
 		ESPcode   string `json:"espcode" binding:"required"`
-		Condition bool   `json:"Condition" binding:"required"`
+		Condition bool   `json:"condition" binding:"required"`
 	}
 
 	if err := c.ShouldBindJSON(&body); err != nil {
@@ -24,14 +24,14 @@ func RelayUpdateState(c *gin.Context) {
 
 	var esp models.ESP
 
-	if err := db.First(&esp, "espcode = ?", body.ESPcode).Error; err != nil {
+	if err := db.First(&esp, "es_pcode = ?", body.ESPcode).Error; err != nil {
 		c.JSON(404, gin.H{"error": "ESP not found"})
 		return
 	}
 
 	var relay models.Relay
 
-	if err := db.First(&relay, "es_pid = ?", esp.ID).Error; err != nil {
+	if err := db.First(&relay, "esp_id = ?", esp.ID).Error; err != nil {
 		relay = models.Relay{
 			ESPID:     esp.ID,
 			Condition: body.Condition,

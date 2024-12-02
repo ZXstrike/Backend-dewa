@@ -2,7 +2,6 @@ package pzem
 
 import (
 	"net/http"
-	"strconv"
 
 	"zxsttm/database"
 	"zxsttm/database/models"
@@ -12,15 +11,18 @@ import (
 
 func GetPZEMByID(c *gin.Context) {
 	db := database.DB
-	id := c.Param("id")
-	pzemID, err := strconv.ParseUint(id, 10, 64)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+	espcode := c.Query("id")
+
+	var esp models.ESP
+
+	if err := db.First(&esp, "espcode = ?", espcode).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "ESP not found"})
 		return
 	}
 
 	var pzem models.PZEM
-	if err := db.First(&pzem, pzemID).Error; err != nil {
+
+	if err := db.First(&pzem, "esp_id = ?", esp.ID).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "PZEM not found"})
 		return
 	}

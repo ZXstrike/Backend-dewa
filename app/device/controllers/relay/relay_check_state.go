@@ -11,9 +11,9 @@ import (
 
 func GetRelayState(c *gin.Context) {
 	db := database.DB
-	espCode := c.Param("espcode")
+	espCode := c.Query("espcode")
 
-	esp := models.ESP{}
+	var esp models.ESP
 
 	if err := db.First(&esp, "es_pcode = ?", espCode).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "ESP tidak ditemukan"})
@@ -21,7 +21,7 @@ func GetRelayState(c *gin.Context) {
 	}
 
 	var relay models.Relay
-	if err := db.First(&relay, "es_pid = ?", esp.ID).Error; err != nil {
+	if err := db.First(&relay, "esp_id = ?", esp.ID).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Relay tidak ditemukan"})
 		return
 	}

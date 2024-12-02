@@ -23,7 +23,7 @@ func ElectricalExpenseCal() {
 
 		for _, device := range devices {
 			var devicePzem []models.PZEM
-			db.Where("es_pid = ?", device.ID).Where("created_at > ?", time.Now().Add(30*time.Second)).Find(&devicePzem)
+			db.Where("esp_id = ?", device.ID).Where("created_at > ?", time.Now().Add(30*time.Second)).Find(&devicePzem)
 
 			// Calculate electrical expense
 			// The formula for calculating electrical expense is:

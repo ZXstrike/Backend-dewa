@@ -43,6 +43,8 @@ func StartServer(Port string, db *gorm.DB) {
 
 	go devicesession.DeviceLiveCheck(db)
 
+	go devicesession.ElectricalExpenseCal()
+
 	// Graceful shutdown
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)

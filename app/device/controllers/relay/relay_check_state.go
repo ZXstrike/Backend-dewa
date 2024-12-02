@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetRelayByID(c *gin.Context) {
+func GetRelayState(c *gin.Context) {
 	db := database.DB
 	id := c.Param("id")
 	relayID, err := strconv.ParseUint(id, 10, 64)
@@ -25,5 +25,5 @@ func GetRelayByID(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, relay)
+	c.JSON(http.StatusOK, gin.H{"data": relay})
 }

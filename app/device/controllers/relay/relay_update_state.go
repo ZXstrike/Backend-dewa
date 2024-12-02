@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func RELAYadd(c *gin.Context) {
+func RelayUpdateState(c *gin.Context) {
 	db := database.DB
 
 	var body struct {
@@ -30,15 +30,18 @@ func RELAYadd(c *gin.Context) {
 		return
 	}
 
-	Relay := models.Relay{
-		ESPID:     uint(body.ESPID),
-		Condition: bool(body.Condition),
+	var relay models.Relay
+
+	if err := db.Where("espid = ?", body.ESPID).First(&relay).Error; err != nil {
+		relay = models.Relay{
+			ESPID:     uint(body.ESPID),
+			Condition: body.Condition,
+		}
+		db.Create(&relay)
+	} else {
+		relay.Condition = body.Condition
+		db.Save(&relay)
 	}
 
-	if err := db.Create(&Relay).Error; err != nil {
-		c.JSON(500, gin.H{"error": err})
-		return
-	}
-
-	c.JSON(200, gin.H{"message": "Record created successfully"})
+	c.JSON(200, gin.H{"message": "Update relay state success"})
 }

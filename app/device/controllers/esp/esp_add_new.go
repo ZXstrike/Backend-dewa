@@ -25,7 +25,17 @@ func ESPadd(c *gin.Context) {
 		ESPcode: body.ESPcode,
 	}
 
+	relay := models.Relay{
+		ESPID:     esp.ID,
+		Condition: false,
+	}
+
 	if err := db.Create(&esp).Error; err != nil {
+		c.JSON(500, gin.H{"error": err})
+		return
+	}
+
+	if err := db.Create(&relay).Error; err != nil {
 		c.JSON(500, gin.H{"error": err})
 		return
 	}

@@ -20,4 +20,8 @@ func AuthRoutes(router *gin.Engine) {
 
 	authGroup.GET("/getotp", controllers.GetAuthGetOtp)
 
+	authGroup.GET("/checkotp", controllers.AuthOtp)
+
+	authGroup.POST("/resetpassword", controllers.ResetPassword)
+
 }

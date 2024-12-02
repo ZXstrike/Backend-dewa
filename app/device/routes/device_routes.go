@@ -24,7 +24,9 @@ func DeviceRoutes(router *gin.Engine) {
 	deviceRoutes.GET("/check-pzem", pzem.GetPZEMByID)
 	deviceRoutes.POST("/add-pzem", pzem.PZEMadd)
 	deviceRoutes.GET("/expense", pzem.GetExpense)
+	deviceRoutes.GET("/getall-pzem", pzem.PZEMGetAll)
 
 	deviceRoutes.GET("/check-relay", relay.GetRelayByID)
 	deviceRoutes.POST("/add-relay", relay.RELAYadd)
+	deviceRoutes.GET("/getall-relay", relay.RelayGetAll)
 }

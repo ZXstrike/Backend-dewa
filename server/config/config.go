@@ -6,6 +6,7 @@ import (
 	"encoding/pem"
 	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/joho/godotenv"
 )
@@ -32,6 +33,7 @@ type SMTPConfig struct {
 	Username string
 	Email    string
 	Password string
+	SSL      bool
 }
 
 var Config *AppConfig
@@ -55,6 +57,11 @@ func LoadConfig() (*AppConfig, error) {
 		return nil, fmt.Errorf("error loading public key: %w", err)
 	}
 
+	port, err := strconv.Atoi(os.Getenv("SMTP_PORT"))
+	if err != nil {
+		return nil, fmt.Errorf("error loading SMTP port: %w", err)
+	}
+
 	Config = &AppConfig{
 		ServePort:  os.Getenv("SERVE_PORT"),
 		PrivateKey: privateKey,
@@ -66,12 +73,14 @@ func LoadConfig() (*AppConfig, error) {
 			Port:     os.Getenv("DB_PORT"),
 			Database: os.Getenv("DB_DATABASE"),
 		},
+		
 		SMTP: SMTPConfig{
 			Host:     os.Getenv("SMTP_HOST"),
-			Port:     587,
+			Port:     port,
 			Username: os.Getenv("SMTP_USERNAME"),
 			Email:    os.Getenv("SMTP_EMAIL"),
 			Password: os.Getenv("SMTP_PASSWORD"),
+			SSL:      os.Getenv("SMTP_SSL") == "true",
 		},
 	}
 

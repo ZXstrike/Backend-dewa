@@ -39,7 +39,14 @@ func AuthRegister(context *gin.Context) {
 		Password: string(hash),
 	}
 
-	db.Create(&user)
+	userErr := db.Create(&user).Error
+
+	if userErr != nil {
+		context.JSON(500, gin.H{
+			"error": "Error while creating the user",
+		})
+		return
+	}
 
 	context.JSON(200, gin.H{
 		"message": "Auth Register",

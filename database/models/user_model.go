@@ -8,10 +8,9 @@ import (
 
 type User struct {
 	gorm.Model
-	Username  string
-	Email     string
+	Username  string `json:"username" gorm:"unique"`
+	Email     string `json:"email" gorm:"unique"`
 	Password  string
-	ID        string    `gorm:"primaryKey" json:"id"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }

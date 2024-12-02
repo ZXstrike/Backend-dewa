@@ -11,40 +11,49 @@ import (
 )
 
 func GetAuthGetOtp(context *gin.Context) {
+    db := database.DB
 
-	db := database.DB
+    email := context.Query("email")
 
-	email := context.Query("email")
+    var user models.User
 
-	var otpString string
+    if err := db.Where("email = ?", email).First(&user).Error; err != nil {
+        context.JSON(404, gin.H{
+            "error": "User not found",
+        })
+        return
+    }
 
-	var userOtp models.UserOTP
+    var otpString string
 
-	if err := db.Where("email = ?", email).First(&userOtp).Error; err != nil {
-		otpString = otp.GenerateOTP()
-		userOtp.Email = email
-		userOtp.OTP = otpString
-		t := time.Now().Add(5 * time.Minute)
-		userOtp.TimeOut = &t
-		db.Create(&userOtp)
-	} else {
-		otpString = userOtp.OTP
-		t := time.Now().Add(5 * time.Minute)
-		userOtp.TimeOut = &t
-		db.Save(&userOtp)
-	}
+    var userOtp models.UserOTP
 
-	err := mail.SendMail([]string{email}, []string{}, "OTP", otpString)
+    if err := db.Where("email = ?", email).First(&userOtp).Error; err != nil {
+        otpString = otp.GenerateOTP()
+        userOtp.Email = email
+        userOtp.OTP = otpString
+        t := time.Now().Add(5 * time.Minute)
+        userOtp.TimeOut = &t
+        db.Create(&userOtp)
+    } else {
+        otpString = otp.GenerateOTP()
+        userOtp.OTP = otpString
+        t := time.Now().Add(5 * time.Minute)
+        userOtp.TimeOut = &t
+        db.Save(&userOtp)
+    }
 
-	if err != nil {
-		context.JSON(500, gin.H{
-			"error": "Failed to send OTP",
-		})
-		return
-	}
+    err := mail.SendMail([]string{email}, []string{}, "OTP", otpString)
 
-	context.JSON(200, gin.H{
-		"message": "Auth check",
-	})
+    if err != nil {
+        context.JSON(500, gin.H{
+            "error": "Failed to send OTP",
+        })
+        return
+    }
+
+    context.JSON(200, gin.H{
+        "message": "Auth check",
+    })
 
 }

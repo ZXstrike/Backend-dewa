@@ -26,9 +26,9 @@ func AuthLogin(context *gin.Context) {
 
 	var user models.User
 
-	db.First(&user, "email = ?", body.Email)
+	err := db.First(&user, "email = ?", body.Email).Error
 
-	if user.ID == "0" {
+	if err != nil {
 		context.JSON(404, gin.H{
 			"error": "User not found",
 		})

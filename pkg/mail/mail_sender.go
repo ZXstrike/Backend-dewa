@@ -17,7 +17,10 @@ func SendMail(to []string, cc []string, subject, message string) error {
 
 	dialer := &gomail.Dialer{
 		Host: config.Config.SMTP.Host,
-		Port: 25,
+		Port: config.Config.SMTP.Port,
+		Username: config.Config.SMTP.Username,
+        Password: config.Config.SMTP.Password,
+		SSL: config.Config.SMTP.SSL,
 	}
 
 	err := dialer.DialAndSend(mailer)
